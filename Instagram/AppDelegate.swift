@@ -7,15 +7,33 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
 
+    var window: UIWindow?
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Instagram"
+                configuration.clientKey = "bf2uih8438f4bu4fh83f"
+                configuration.server = "https://gentle-cove-88569.herokuapp.com/parse"
+            })
+        )
+        
+        // check if user is logged in
+        if PFUser.currentUser() != nil {
+            // if there's a current user, load the home view controller
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewControllerWithIdentifier("Home")
+            window?.rootViewController = vc
+        }
+        
         return true
     }
 
@@ -40,7 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
+
+
+
+
 

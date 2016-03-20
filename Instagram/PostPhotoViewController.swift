@@ -7,29 +7,49 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class PostPhotoViewController: UIViewController {
 
+    @IBOutlet weak var captionTextView: UITextView!
+    @IBOutlet weak var imageToPost: UIImageView!
+    var pickedImage: UIImage!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    imageToPost.image = pickedImage
     
+    let post = UIBarButtonItem(title: "post!", style: .Plain, target: self, action: Selector("onPost:"))
+    self.navigationItem.rightBarButtonItem = post
+    
+}
 
-    /*
-    // MARK: - Navigation
+override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+func onPost(sender: AnyObject){
+    print("about to post!")
+    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    Post.postUserImage(imageToPost.image, withCaption: captionTextView.text) { (success: Bool, error: NSError?) -> Void in
+        if success {
+            print("photo posted!")
+            self.performSegueWithIdentifier("backToFeed", sender: nil)
+        } else {
+            print(error?.localizedDescription)
+        }
     }
-    */
+}
+
+/*
+// MARK: - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+// Get the new view controller using segue.destinationViewController.
+// Pass the selected object to the new view controller.
+}
+*/
 
 }
